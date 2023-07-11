@@ -1,4 +1,5 @@
 require('dotenv').config();
+import request from 'request';
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 // verify token is random string
@@ -64,7 +65,18 @@ let postWebhook = (req, res) =>{
 
 //handles message events
 function handleMessage(sender_psid, received_message) {
+  let response;
 
+  // Check nếu nội dung của tin nhắn chưa text thì trả về response
+  if (received_message.text) {
+    // tạo đoạn text trả về cho người dùng
+    response = {
+      'text': `Bạn vừa gửi một đoạn text: "${received_message.text}". Giờ hãy gửi cho tôi một bức ảnh! `,
+    }
+
+    // gửi response cho người dùng
+    callSendAPI(sender_psid, response);
+  }
 };
 
 //handles message_postbacks events
@@ -76,6 +88,31 @@ function handleMessage(sender_psid, received_message) {
 function handleMessage(sender_psid, received_message) {
 
 };
+
+// Sends response messages via the Send API
+function callSendAPI(sender_psid, response) {
+  // Construct the message body
+  let request_body = {
+      "recipient": {
+          "id": sender_psid
+      },
+      "message": { "text": response }
+  };
+
+  // Send the HTTP request to the Messenger Platform
+  request({
+      "uri": "https://graph.facebook.com/v7.0/me/messages",
+      "qs": { "access_token": PAGE_ACCESS_TOKEN },
+      "method": "POST",
+      "json": request_body
+  }, (err, res, body) => {
+      if (!err) {
+          console.log('message sent!');
+      } else {
+          console.error("Unable to send message:" + err);
+      }
+  });
+}
 
 module.exports = {
   getHomePage: getHomePage,
