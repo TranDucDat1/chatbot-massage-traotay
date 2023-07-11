@@ -1,12 +1,14 @@
 require('dotenv').config();
 
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+// verify token is random string
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+
 let getHomePage = (req, res) => {
   return res.send('xin chao');
 };
 
 let getWebhook = (req, res) => {
-  // verify token is random string
-  let VERIFY_TOKEN = process.env.VERIFY_TOKEN;
   let mode = req.query["hub.mode"];
   let token = req.query["hub.verify_token"];
   let challenge = req.query["hub.challenge"];
@@ -28,11 +30,30 @@ let postWebhook = (req, res) => {
     body.entry.array.forEach(function(entry) {
       let webhook_event = entry.messaging[0];
       console.log(webhook_event);
+
+      //get sender PSID
+      let sender_psid = webhook_event.sender.id;
+      console.log('Sender PSID: ' + sender_psid);
     });
     res.status(200).send('EVENT_RECEIVED');
   } else {
     res.status(404).send('Loi roi')
   }
+
+};
+
+//handles message events
+function handleMessage(sender_psid, received_message) {
+
+};
+
+//handles message_postbacks events
+function handleMessage(sender_psid, received_message) {
+
+};
+
+//send response messages via the send API
+function handleMessage(sender_psid, received_message) {
 
 };
 
