@@ -2,6 +2,7 @@ require('dotenv').config();
 import request from 'request';
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+console.log('page access token: ', PAGE_ACCESS_TOKEN);
 // verify token is random string
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
