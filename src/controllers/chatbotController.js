@@ -1,10 +1,6 @@
 require("dotenv").config();
 import request from "request";
 
-const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
-// verify token is random string
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
-
 let getHomePage = (req, res) => {
   return res.send('xin chao');
 };
@@ -47,6 +43,7 @@ let postWebhook = (req, res) =>{
 
 let getWebhook = (req, res) => {
 
+    let VERIFY_TOKEN = process.env.MY_VERIFY_FB_TOKEN;
     // Parse the query params
     let mode = req.query['hub.mode'];
     let token = req.query['hub.verify_token'];
@@ -97,8 +94,8 @@ function callSendAPI(sender_psid, response) {
 
   // Send the HTTP request to the Messenger Platform
   request({
-      "uri": "https://graph.facebook.com/me/messages",
-      "qs": { "access_token": PAGE_ACCESS_TOKEN },
+      "uri": "https://graph.facebook.com/v7.0/me/messages",
+      "qs": { "access_token": process.env.FB_PAGE_TOKEN },
       "method": "POST",
       "json": request_body
   }, (err, res, body) => {
