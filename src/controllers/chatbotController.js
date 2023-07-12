@@ -101,6 +101,8 @@ function callSendAPI(sender_psid, response) {
   }, (err, res, body) => {
       if (!err) {
           console.log('message sent!');
+          console.log('why chatbot don not send message: ', res);
+          console.log('why chatbot don not send message body: ', body);
       } else {
           console.error("Unable to send message:" + err);
       }
