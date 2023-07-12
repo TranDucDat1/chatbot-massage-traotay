@@ -73,9 +73,7 @@ function handleMessage(sender_psid, received_message) {
   // Check nếu nội dung của tin nhắn chứa text thì trả về response cho người gửi
   if (received_message.text) {
     // tạo đoạn text trả về cho người dùng
-    response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an image!`
-    };
+    response = `You sent the message: "${received_message.text}". Now send me an image!`;
 
     // gửi response cho người dùng
     callSendAPI(sender_psid, response);
@@ -87,7 +85,7 @@ function callSendAPI(sender_psid, response) {
   // Construct the message body
   let request_body ={
     "recipient": {
-      id: sender_psid,
+      "id": sender_psid,
     },
     "message": { "text": response },
   };
