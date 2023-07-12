@@ -73,10 +73,43 @@ function handleMessage(sender_psid, received_message) {
   // Check nếu nội dung của tin nhắn chứa text thì trả về response cho người gửi
   if (received_message.text) {
     // tạo đoạn text trả về cho người dùng
-    response = `Bạn đã gửi cho tôi một tin nhắn: "${received_message.text}". Giờ hãy gửi cho tôi một bức ảnh!`;
+    response = {
+      "text": `Bạn đã gửi cho tôi một tin nhắn: "${received_message.text}". Giờ hãy gửi cho tôi một bức ảnh!`
+    }
 
     // gửi response cho người dùng
     callSendAPI(sender_psid, response);
+  } else if (received_message.attachments) {
+    //Get URL của tin nhắn đính kèm
+    let attachment_url = received_message.attachments[0].payload.url;
+    response = {
+      "attachment": {
+        "type": "template",
+        "payload": {
+            "template_type": "generic",
+            "elements": [
+              {
+                "title": "Đây có phải bức ảnh của bạn không?",
+                "subtitle": "Hãy nói cho tôi biết <3",
+                "image_url": attachment_url,
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "Đúng!",
+                    "payload": "yes",
+                  },
+                  {
+                    "type": "postback",
+                    "title": "Sai!",
+                    "payload": "no",
+                  }
+                ],
+              }
+            ]
+          }
+        }
+    }
+    handlePostback(sender_psid, response);
   }
 };
 
@@ -87,7 +120,7 @@ function callSendAPI(sender_psid, response) {
     "recipient": {
       "id": sender_psid,
     },
-    "message": { "text": response },
+    "message": response,
   };
 
   // Send the HTTP request to the Messenger Platform
@@ -99,8 +132,6 @@ function callSendAPI(sender_psid, response) {
   }, (err, res, body) => {
       if (!err) {
           console.log("message sent!");
-          console.log("why chatbot don not send message: ", res);
-          console.log("why chatbot don not send message body: ", body);
       } else {
           console.error("Unable to send message:" + err);
       }
@@ -155,21 +186,21 @@ function callSendAPI(sender_psid, response) {
 // }
 
 // Handles messaging_postbacks events
-// function handlePostback(sender_psid, received_postback) {
-//     let response;
+function handlePostback(sender_psid, received_postback) {
+    let response;
 
-//     // Get the payload for the postback
-//     let payload = received_postback.payload;
+    // Get the payload for the postback
+    let payload = received_postback.payload;
 
-//     // Set the response based on the postback payload
-//     if (payload === "yes") {
-//         response = { "text": "Thanks!" }
-//     } else if (payload === "no") {
-//         response = { "text": "Oops, try sending another image." }
-//     }
-//     // Send the message to acknowledge the postback
-//     callSendAPI(sender_psid, response);
-// }
+    // Set the response based on the postback payload
+    if (payload === "yes") {
+        response = { "text": "Thanks!" }
+    } else if (payload === "no") {
+        response = { "text": "Oops, try sending another image." }
+    }
+    // Send the message to acknowledge the postback
+    callSendAPI(sender_psid, response);
+}
 
 // Sends response messages via the Send API
 // function callSendAPI(sender_psid, response) {
