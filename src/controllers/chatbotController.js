@@ -74,7 +74,7 @@ function handleMessage(sender_psid, received_message) {
   if (received_message.text) {
     // tạo đoạn text trả về cho người dùng
     response = {
-      'text': `Bạn vừa gửi một đoạn text: "${received_message.text}". Giờ hãy gửi cho tôi một bức ảnh! `,
+      'text': `You sent the message: "${received_message.text}". Now send me an image!`,
     }
 
     // gửi response cho người dùng
