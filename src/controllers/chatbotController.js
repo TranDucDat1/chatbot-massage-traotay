@@ -27,7 +27,7 @@ let postWebhook = (req, res) =>{
             if (webhook_event.message) {
               handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
-              handleMessage(sender_psid, webhook_event.postback);
+              handlePostback(sender_psid, webhook_event.postback);
             }
 
         });
@@ -76,9 +76,6 @@ function handleMessage(sender_psid, received_message) {
     response = {
       "text": `Bạn đã gửi cho tôi một tin nhắn: "${received_message.text}". Giờ hãy gửi cho tôi một bức ảnh!`
     }
-
-    // gửi response cho người dùng
-    callSendAPI(sender_psid, response);
   } else if (received_message.attachments) {
     //Get URL của tin nhắn đính kèm
     let attachment_url = received_message.attachments[0].payload.url;
@@ -109,8 +106,9 @@ function handleMessage(sender_psid, received_message) {
           }
         }
     }
-    handlePostback(sender_psid, response);
   }
+  // gửi response cho người dùng
+  callSendAPI(sender_psid, response);
 };
 
 // Sends response messages via the Send API
