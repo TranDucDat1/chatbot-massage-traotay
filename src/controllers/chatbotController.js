@@ -73,7 +73,7 @@ function handleMessage(sender_psid, received_message) {
   // Check nếu nội dung của tin nhắn chứa text thì trả về response cho người gửi
   if (received_message.text) {
     // tạo đoạn text trả về cho người dùng
-    response = `You sent the message: "${received_message.text}". Now send me an image!`;
+    response = `Bạn đã gửi cho tôi một tin nhắn: "${received_message.text}". Giờ hãy gửi cho tôi một bức ảnh!`;
 
     // gửi response cho người dùng
     callSendAPI(sender_psid, response);
