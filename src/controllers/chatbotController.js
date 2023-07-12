@@ -156,5 +156,5 @@ function handlePostback(sender_psid, received_postback) {
 module.exports = {
   postWebhook: postWebhook,
   getWebhook: getWebhook,
-  getHomePage
+  getHomePage: getHomePage,
 };
