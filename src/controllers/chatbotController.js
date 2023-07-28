@@ -79,6 +79,7 @@ function handleMessage(sender_psid, received_message) {
   } else if (received_message.attachments) {
     //Get URL của tin nhắn đính kèm
     let attachment_url = received_message.attachments[0].payload.url;
+    console.log('attachment url: ' + attachment_url);
     response = {
       "attachment": {
         "type": "template",
