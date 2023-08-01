@@ -1,8 +1,10 @@
 require("dotenv").config();
 import request from "request";
 
+const FB_PAGE_TOKEN = process.env.FB_PAGE_TOKEN;
+
 let getHomePage = (req, res) => {
-  return res.send("xin chao");
+  return res.render('homePage.ejs');
 };
 
 let postWebhook = (req, res) =>{
@@ -23,7 +25,7 @@ let postWebhook = (req, res) =>{
             let sender_psid = webhook_event.sender.id;
             console.log("Sender PSID: " + sender_psid);
 
-            //check nếu là message hoặc postback thì sẽ gửi lại thông báo sao cho hợp lý
+            //check nếu là message gửi đi hoặc postback(gửi lại) thì sẽ gửi lại thông báo sao cho hợp lý
             if (webhook_event.message) {
               handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
@@ -125,7 +127,7 @@ function callSendAPI(sender_psid, response) {
   // Send the HTTP request to the Messenger Platform
   request({
       "uri": "https://graph.facebook.com/v7.0/me/messages",
-      "qs": { "access_token": process.env.FB_PAGE_TOKEN },
+      "qs": { "access_token": FB_PAGE_TOKEN },
       "method": "POST",
       "json": request_body
   }, (err, res, body) => {
@@ -154,8 +156,35 @@ function handlePostback(sender_psid, received_postback) {
     callSendAPI(sender_psid, response);
 }
 
+let setupProfile = async (req, res) => {
+  //call profile facebook api
+  let request_body ={
+    "get_started": {"payload": "qr"},
+    "whitelisted_domains": ["https://chatbot-traotay-intern.onrender.com/"],
+  };
+
+  // Send the HTTP request to the Messenger Platform
+  await request({
+      "uri": `https://graph.facebook.com/v17.0/me/messenger_profile?access_token=${FB_PAGE_TOKEN}`,
+      "qs": { "access_token": FB_PAGE_TOKEN },
+      "method": "POST",
+      "json": request_body
+  }, (err, res, body) => {
+    console.log('BODY: ', body);
+      if (!err) {
+          console.log("Setup user profile succeeds!");
+      } else {
+          console.error("Unable to setup user profile:" + err);
+      }
+  });
+
+  return res.send("Setup user profile succeeds!");
+
+};
+
 module.exports = {
   postWebhook: postWebhook,
   getWebhook: getWebhook,
   getHomePage: getHomePage,
+  setupProfile: setupProfile
 };
