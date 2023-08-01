@@ -151,6 +151,11 @@ function handlePostback(sender_psid, received_postback) {
         response = { "text": "Thanks!" }
     } else if (payload === "no") {
         response = { "text": "Xin lỗi, hãy gửi cho tôi một cái ảnh khác" }
+    } else if (payload === "hey") {
+      response = { "text": "gọi cái gì cư :D" }
+    } else if (payload === "GET_STARTED") {
+      // xử lý khi người dùng nhấn vào nút get stated
+      response = { "text": "Xin chào bạn ABC đã đến với cửa hàng của chúng tôi, chúc bạn mua hàng vui vẻ, iuuuuuu..." }
     }
     // Send the message to acknowledge the postback
     callSendAPI(sender_psid, response);
@@ -159,7 +164,7 @@ function handlePostback(sender_psid, received_postback) {
 let setupProfile = async (req, res) => {
   //call profile facebook api
   let request_body ={
-    "get_started": {"payload": "qr"},
+    "get_started": {"payload": "GET_STARTED"},
     "whitelisted_domains": ["https://chatbot-traotay-intern.onrender.com/"],
   };
 
