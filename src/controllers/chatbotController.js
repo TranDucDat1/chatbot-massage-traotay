@@ -147,16 +147,20 @@ function handlePostback(sender_psid, received_postback) {
     let payload = received_postback.payload;
 
     // Set the response based on the postback payload
-    if (payload === "yes") {
-        response = { "text": "Thanks!" }
-    } else if (payload === "no") {
-        response = { "text": "Xin lỗi, hãy gửi cho tôi một cái ảnh khác" }
-    } else if (payload === "hey") {
-      response = { "text": "gọi cái gì cư :D" }
-    } else if (payload === "GET_STARTED") {
-      // xử lý khi người dùng nhấn vào nút get stated
-      response = { "text": "Xin chào bạn ABC đã đến với cửa hàng của chúng tôi, chúc bạn mua hàng vui vẻ, iuuuuuu..." }
+    switch(payload) {
+      case 'yes':
+          response = { "text": "Thanks!" }
+        break;
+      case 'no':
+          response = { "text": "Xin lỗi, hãy gửi cho tôi một cái ảnh khác" }
+        break;
+      case 'GET_STARTED':
+          response = { "text": "Xin chào bạn ABC đã đến với cửa hàng của chúng tôi, chúc bạn mua hàng vui vẻ, iuuuuuu..." }
+        break;
+      default: 
+          response = { "text": `Xin lỗi, tôi không hiểu ${payload} của bạn là gì :(`}
     }
+
     // Send the message to acknowledge the postback
     callSendAPI(sender_psid, response);
 }
