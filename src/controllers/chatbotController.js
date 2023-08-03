@@ -154,7 +154,7 @@ function handlePostback(sender_psid, received_postback) {
       case 'no':
           response = { "text": "Xin lỗi, hãy gửi cho tôi một cái ảnh khác" }
         break;
-      case 'GET_STARTED':
+      case 'qr':
           response = { "text": "Xin chào bạn ABC đã đến với cửa hàng của chúng tôi, chúc bạn mua hàng vui vẻ, iuuuuuu..." }
         break;
       default: 
@@ -168,7 +168,7 @@ function handlePostback(sender_psid, received_postback) {
 let setupProfile = async (req, res) => {
   //call profile facebook api
   let request_body ={
-    "get_started": {"payload": "GET_STARTED"},
+    "get_started": {"payload": "qr"},
     "whitelisted_domains": ["https://chatbot-traotay-intern.onrender.com/"],
   };
 
