@@ -1,6 +1,8 @@
 require("dotenv").config();
 import request from "request";
 
+import chatBotService from "../service/chatbot.service";
+
 const FB_PAGE_TOKEN = process.env.FB_PAGE_TOKEN;
 
 let getHomePage = (req, res) => {
@@ -140,7 +142,7 @@ function callSendAPI(sender_psid, response) {
 }
 
 // Handles messaging_postbacks events
-function handlePostback(sender_psid, received_postback) {
+async function handlePostback(sender_psid, received_postback) {
     let response;
 
     // Get the payload for the postback
@@ -155,7 +157,7 @@ function handlePostback(sender_psid, received_postback) {
           response = { "text": "Xin lỗi, hãy gửi cho tôi một cái ảnh khác" }
         break;
       case 'qr':
-          response = { "text": "Xin chào bạn ABC đã đến với cửa hàng của chúng tôi, chúc bạn mua hàng vui vẻ, iuuuuuu..." }
+        await chatBotService.handleGetStarted(sender_psid);
         break;
       default: 
           response = { "text": `Xin lỗi, tôi không hiểu ${payload} của bạn là gì :(`}
